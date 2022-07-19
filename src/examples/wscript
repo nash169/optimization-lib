@@ -1,0 +1,43 @@
+#!/usr/bin/env python
+# encoding: utf-8
+
+import os
+import os.path as osp
+import fnmatch
+
+from wafbuild.utils import load
+
+required = {"ipopt_test.cpp": ["IPOPT"],
+            "nlopt_test.cpp": ["NLOPT"], }
+optional = {}
+
+
+def options(opt):
+    pass
+
+
+def configure(cfg):
+    pass
+
+
+def build(bld):
+    sources = []
+    for _, _, filenames in os.walk("."):
+        sources += [
+            filename for filename in filenames if filename.endswith(('.cpp', '.cc'))]
+
+    # Compile all the examples
+    for example in sources:
+        if example in required:
+            if not set(required[example]).issubset(bld.env["libs"]):
+                break
+
+        bld.program(
+            features="cxx",
+            install_path=None,
+            source=example,
+            includes="..",
+            uselib=bld.env["libs"],
+            use=bld.env["libname"],
+            target=example[: len(example) - len(".cpp")],
+        )
