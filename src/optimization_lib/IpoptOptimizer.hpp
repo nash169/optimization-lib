@@ -35,10 +35,6 @@ namespace optimization_lib {
             // _app->Options()->SetStringValue("option_file_name", "hs071.opt");
         }
 
-        ~IpoptOptimizer()
-        {
-        }
-
         bool optimize() override
         {
             // Set options depending on the available functions

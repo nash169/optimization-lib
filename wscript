@@ -2,21 +2,19 @@
 # encoding: utf-8
 
 import os
-import os.path as osp
-
-
 from wafbuild.utils import load
 
 VERSION = "1.0.0"
 APPNAME = "optimization-lib"
 
 libname = "Optimization"
-srcdir = "src/optimization_lib"
+srcdir = "src"
 blddir = "build"
+libdir = "optimization_lib"
 
 compiler = "cxx"
-required = ["eigen", "ipopt"]
-optional = ["nlopt"]
+required = ["eigen"]
+optional = ["ipopt", "nlopt", "qpoases"]
 
 
 def options(opt):
@@ -51,14 +49,14 @@ def build(bld):
 
     # Includes
     includes = []
-    for root, _, filenames in os.walk(srcdir):
-        includes += [osp.join(root, filename)
+    for root, _, filenames in os.walk(os.path.join(srcdir, libdir)):
+        includes += [os.path.join(root, filename)
                      for filename in filenames if filename.endswith(('.hpp', '.h'))]
 
     # Sources
     sources = []
-    for root, _, filenames in os.walk(srcdir):
-        sources += [osp.join(root, filename)
+    for root, _, filenames in os.walk(os.path.join(srcdir, libdir)):
+        sources += [os.path.join(root, filename)
                     for filename in filenames if filename.endswith(('.cpp', '.cc'))]
 
     # Build library
@@ -80,9 +78,9 @@ def build(bld):
     bld.recurse("./src/examples")
 
     # Install headers
-    [bld.install_files("${PREFIX}/include/" + osp.dirname(f)[4:], f)
+    [bld.install_files("${PREFIX}/include/" + os.path.dirname(f)[4:], f)
      for f in includes]
 
     # Install libraries
-    bld.install_files("${PREFIX}/lib", blddir + "/lib" + bld.get_env()["libname"] + ".a") if bld.env["lib_type"] == "cxxstlib" else bld.install_files(
-        "${PREFIX}/lib", blddir + "/lib" + bld.get_env()["libname"] + "." + bld.env.SUFFIX)
+    bld.install_files("${PREFIX}/lib", blddir + "/lib" + bld.get_env()["libname"] + "." + bld.env.SUFFIX) if bld.options.shared else bld.install_files(
+        "${PREFIX}/lib", blddir + "/lib" + bld.get_env()["libname"] + ".a")

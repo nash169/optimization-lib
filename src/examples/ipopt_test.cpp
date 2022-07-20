@@ -3,6 +3,8 @@
 #include <iostream>
 #include <memory>
 
+// https://coin-or.github.io/Ipopt/INTERFACES.html#INTERFACE_CPP
+
 using namespace Ipopt;
 using namespace optimization_lib;
 

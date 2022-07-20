@@ -2,13 +2,10 @@
 # encoding: utf-8
 
 import os
-import os.path as osp
-import fnmatch
-
-from wafbuild.utils import load
 
 required = {"ipopt_test.cpp": ["IPOPT"],
-            "nlopt_test.cpp": ["NLOPT"], }
+            "nlopt_test.cpp": ["NLOPT"],
+            "nlopt_test.cpp": ["QPOASES"], }
 optional = {}
 
 
@@ -22,7 +19,7 @@ def configure(cfg):
 
 def build(bld):
     sources = []
-    for _, _, filenames in os.walk("."):
+    for _, _, filenames in os.walk(bld.path.abspath()):
         sources += [
             filename for filename in filenames if filename.endswith(('.cpp', '.cc'))]
 

@@ -14,10 +14,6 @@ namespace optimization_lib {
         {
         }
 
-        ~AbstractOptimizer()
-        {
-        }
-
         AbstractOptimizer& setDimension(const size_t& n)
         {
             // Set problem dimension
@@ -112,11 +108,13 @@ namespace optimization_lib {
 
         virtual bool optimize() { return false; }
 
+        virtual Eigen::VectorXd solution() { return _xSol; }
+
     protected:
         size_t _n, // Problem dimension
             _m; // Number of constraints
 
-        // Starting point
+        // Starting point and solution
         Eigen::VectorXd _x0, _xSol;
 
         // Objective (maybe allow for multiple objectives)
