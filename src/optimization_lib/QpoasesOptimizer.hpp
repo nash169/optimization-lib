@@ -71,9 +71,8 @@ namespace optimization_lib {
         {
             if constexpr (std::is_same_v<Solver, SQProblem>)
                 return _qp->hotstart(_H.data(), _g.data(), _A.data(), _lb.data(), _ub.data(), _lbA.data(), _ubA.data(), _nWSR);
-            else {
+            else
                 return _qp->hotstart(_g.data(), _lb.data(), _ub.data(), _lbA.data(), _ubA.data(), _nWSR);
-            }
         }
 
         Eigen::VectorXd solution() override
