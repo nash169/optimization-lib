@@ -60,7 +60,7 @@ namespace optimization_lib {
         bool init()
         {
             // Setting QP problem
-            _qp = std::make_unique<Solver>(_n, _m);
+            _qp = std::make_unique<Solver>(_H.rows(), _A.rows());
             Options options;
             _qp->setOptions(options);
 
@@ -77,11 +77,19 @@ namespace optimization_lib {
 
         Eigen::VectorXd solution() override
         {
-            real_t xOpt[_n];
+            real_t xOpt[_H.rows()];
             _qp->getPrimalSolution(xOpt);
-            _xSol = Eigen::Map<Eigen::VectorXd>(xOpt, _n);
+            _xSol = Eigen::Map<Eigen::VectorXd>(xOpt, _H.rows());
             return AbstractOptimizer::solution();
         }
+
+        Eigen::MatrixXd& hessianMatrix() { return _H; }
+        Eigen::MatrixXd& constraintsMatrix() { return _A; }
+        Eigen::VectorXd& gradientVector() { return _g; }
+        Eigen::VectorXd& lowerConstraints() { return _lbA; }
+        Eigen::VectorXd& upperConstraints() { return _ubA; }
+        Eigen::VectorXd& lowerBounds() { return _lb; }
+        Eigen::VectorXd& upperBounds() { return _ub; }
 
     protected:
         // QP problem
