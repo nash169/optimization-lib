@@ -83,26 +83,19 @@ namespace optimization_lib {
             return AbstractOptimizer::solution();
         }
 
-        Eigen::MatrixXd& hessianMatrix() { return _H; }
-        Eigen::MatrixXd& constraintsMatrix() { return _A; }
-        Eigen::VectorXd& gradientVector() { return _g; }
-        Eigen::VectorXd& lowerConstraints() { return _lbA; }
-        Eigen::VectorXd& upperConstraints() { return _ubA; }
-        Eigen::VectorXd& lowerBounds() { return _lb; }
-        Eigen::VectorXd& upperBounds() { return _ub; }
-
-    protected:
-        // QP problem
-        std::unique_ptr<Solver> _qp;
-
-        // Hessian and linear constraints matrices
-        Eigen::MatrixXd _H, _A;
+        // Hessian & Constraint matrix (RowMajor for compatibility with qpOases and because otherwise Eigen::Ref loses the pointer)
+        // For now we use dense matrices but after it is necessary to move to sparse matrices
+        Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> _H, _A;
 
         // Gradient vector, linear constraints and variable upper/lower bounds
         Eigen::VectorXd _g, _lbA, _ubA, _lb, _ub;
 
         // Maximum number of working set recalculations
         int_t _nWSR;
+
+    protected:
+        // QP problem
+        std::unique_ptr<Solver> _qp;
 
         // Cover not needed functions
         using AbstractOptimizer::addConstraints;
