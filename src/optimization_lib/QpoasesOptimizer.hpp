@@ -62,7 +62,7 @@ namespace optimization_lib {
             // Setting QP problem
             _qp = std::make_unique<Solver>(_H.rows(), _A.rows());
             Options options;
-            options.printLevel = PL_NONE;
+            // options.printLevel = PL_NONE;
             _qp->setOptions(options);
 
             return _qp->init(_H.data(), _g.data(), _A.data(), _lb.data(), _ub.data(), _lbA.data(), _ubA.data(), _nWSR);
